@@ -1,0 +1,66 @@
+#!/bin/bash
+if [[ -z $1 ]]; then
+	echo "Useage: its ipa_file0 ipa_file1 ..."
+	exit
+fi
+
+function install_app()
+{
+
+	FILE=$1
+
+	if [[ ${FILE:0:1} != "/" ]];	then
+		FILE=`pwd`/$1
+	fi
+
+	TMP_PATH=/tmp/app_temp
+
+	if [[ -d ${TMP_PATH} ]]; then
+		rm -rf ${TMP_PATH}
+	fi
+
+
+	mkdir -p ${TMP_PATH}
+
+	#解压到目录
+	unzip -d ${TMP_PATH} -q $FILE
+
+	APP_NAME=`ls ${TMP_PATH}/Payload`
+	APP_PATH=${TMP_PATH}/Payload/${APP_NAME}
+
+	# echo ${APP_PATH}
+
+	#安装
+	iTool -a ${APP_PATH}
+
+	#移除目录
+	rm -rf ${TMP_PATH}
+}
+
+function echo_green()
+ {
+ 	echo -e "\033[32m $1 \033[0m"
+ }
+
+
+#批量安装
+
+IPA_COUNT=$#
+
+# echo "$1"
+IPAS=`echo "$@" | awk '{for(i=1;i<=NF;i++)}1'`
+
+for IPA_FILE in $IPAS; do
+	echo_green "start install $IPA_FILE ..."
+	install_app ${IPA_FILE}
+done
+
+# for (( i = 1; i <= ${IPA_COUNT}; i++ )); do
+# 	# install_app ${i}
+# 	echo "$i"
+# done
+
+exit
+
+
+

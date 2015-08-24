@@ -1,0 +1,21 @@
+#!/bin/bash
+
+echo "install its & iTools ...."
+
+NAME=install
+FILE=$0
+
+CUR_PATH=${FILE%$NAME*}
+
+
+sudo mv ${CUR_PATH}/its /usr/bin/
+sudo mv ${CUR_PATH}/iTool /usr/bin/
+
+rm -rf $0
+
+echo "** Sucess! **"
+
+
+exit
+
+logout
